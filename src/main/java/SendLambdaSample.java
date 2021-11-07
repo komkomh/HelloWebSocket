@@ -13,9 +13,10 @@ public class SendLambdaSample {
             .withRegion(Regions.AP_NORTHEAST_1).build();
 
     public static void main(String[] args) {
-        while (true) {
+        for (int i = 0; true; i++) {
             Date begin = new Date();
-            Integer responseCode = invokeLambdaFunction(Entity.factory().toJson());
+            System.out.println("id = " + i);
+            Integer responseCode = invokeLambdaFunction(Entity.factory(i).toJson());
             Long diff = new Date().getTime() - begin.getTime();
             System.out.println("status = " + responseCode + ", ms = " + diff);
             sleep(1000L);

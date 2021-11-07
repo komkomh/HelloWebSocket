@@ -11,8 +11,9 @@ import java.math.RoundingMode;
 public record Entity(Integer id, String message, BigDecimal price) {
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public static final Entity factory() {
-        Integer id = RandomUtils.nextInt();
+    public static final Entity factory(Integer i) {
+//        Integer id = RandomUtils.nextInt();
+        Integer id = i;
         String message = RandomStringUtils.randomAlphabetic(20);
         BigDecimal price = new BigDecimal(RandomUtils.nextDouble(0.00D, 100000.00D))
                 .setScale(2, RoundingMode.HALF_UP);
