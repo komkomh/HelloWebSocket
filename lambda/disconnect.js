@@ -2,17 +2,16 @@ const AWS = require('aws-sdk');
 const docClient = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE_NAME;
 
-exports.handler = async (event, context, callback) => {
+exports.handler = async (event) => {
   try {
     // ログを出力する
-    console.log(event);
+    console.info(event);
 
     // 環境変数が設定れさていなければ
     if (!TABLE_NAME) {
       // 500エラーとする
       console.error("Invalid environment variable.");
-      callback(null, {statusCode: 500, body: 'Failed to disconnect: Invalid environment variable.'});
-      return;
+      return {statusCode: 500, body: 'Failed to disconnect: Invalid environment variable.'};
     }
 
     // 接続情報を削除する
@@ -25,8 +24,10 @@ exports.handler = async (event, context, callback) => {
     }).promise();
 
     // 200を返却する
-    callback(null, {statusCode: 200, body: "connect"});
+    return {statusCode: 200, body: "connect"};
   } catch (e) {
-    callback(null, {statusCode: 500, body: 'Failed to disconnect: ' + JSON.stringify(e)});
+    // 500エラー
+    console.error(e);
+    return {statusCode: 500, body: 'Failed to disconnect: System error.'};
   }
 };
