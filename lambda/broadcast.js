@@ -23,11 +23,13 @@ exports.handler = async (event) => {
     const response = await docClient.scan({TableName: TABLE_NAME,}).promise();
 
     // 全ての接続先にメッセージを送信する
-    const promises = response.Items.map(async item => await apiGateway.postToConnection({
-      ConnectionId: item.cid,
-      Data: JSON.stringify(event)
-    }).promise());
-    await Promise.all(promises);
+    const postMessages = response.Items.map(async item => {
+      return await apiGateway.postToConnection({
+        ConnectionId: item.cid,
+        Data: JSON.stringify(event)
+      }).promise();
+    });
+    await Promise.allSettled(postMessages);
 
     // 200を返却する
     return {statusCode: 200, body: "broadcast"};
